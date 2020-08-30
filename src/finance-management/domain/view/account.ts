@@ -1,9 +1,11 @@
+import { Money } from '../money';
+
 export interface Account {
     id: string;
     bic: string;
     iban: string;
-    balance: number;
-    lineOfCredit: number;
+    balance: Money;
+    lineOfCredit: Money;
     ownerId?: string;
 }
 

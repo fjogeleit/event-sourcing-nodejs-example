@@ -14,7 +14,7 @@ async function bootstrap() {
       .build(),
   );
 
-  SwaggerModule.setup('docs', app, document);
+  SwaggerModule.setup('/', app, document);
 
   app.useGlobalPipes(new ValidationPipe());
 

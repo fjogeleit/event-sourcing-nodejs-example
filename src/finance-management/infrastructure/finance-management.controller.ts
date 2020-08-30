@@ -3,6 +3,7 @@ import { FinanceManagementService } from './finance-management.service';
 import { OpenAccount, PerformDeposit, PerformWithdraw, PerformTransfer, ChangeLineOfCredit } from './command-payload';
 import { ApiTags, ApiBody } from '@nestjs/swagger';
 import { Account } from '../domain/view/account';
+import { Transaction } from '../domain/transaction';
 
 @Controller('finance-management')
 export class FinanceManagementController {
@@ -102,9 +103,20 @@ export class FinanceManagementController {
   @ApiTags('FinanceManaement Read')
   @Get('accounts/:account')
   @HttpCode(200)
-  async get(@Param('account') owner: string): Promise<{ error: string } | Account> {
+  async get(@Param('account') account: string): Promise<{ error: string } | Account> {
     try {
-      return this.service.findAccountById(owner);
+      return this.service.findAccountById(account);
+    } catch (error) {
+      throw new HttpException(error.message, HttpStatus.NOT_FOUND);
+    }
+  }
+
+  @ApiTags('FinanceManaement Read')
+  @Get('accounts/:account/transactions')
+  @HttpCode(200)
+  async transactions(@Param('account') account: string): Promise<{ error: string } | Transaction[]> {
+    try {
+      return (await this.service.findTransactionsByAccountId(account));
     } catch (error) {
       throw new HttpException(error.message, HttpStatus.NOT_FOUND);
     }

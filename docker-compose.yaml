@@ -9,3 +9,9 @@ services:
             - POSTGRES_USER=user
             - POSTGRES_PASSWORD=password
             - TZ=Europe/Berlin
+    app:
+        build:
+            context: .
+        ports: ['3000:3000']
+        environment:
+            - POSTGRES_DB=postgres://user:password@localhost:5432/event-store

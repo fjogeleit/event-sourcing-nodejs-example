@@ -4,6 +4,7 @@ import { FinanceManagementController } from './finance-management.controller';
 import { FinanceManagementService } from './finance-management.service';
 import { AccountEventStoreCollection } from '../domain/account-collection';
 import { IbanExistsQueryVaidator } from './service/iban-exists-validator';
+import { TransactionQueryFinder } from './service/transaction-finder'
 import { AccountsReadModelFinder } from '../read-model/accounts-finder';
 import CommandHandlers from './command-handler';
 import QueryHandlers from './query-handler';
@@ -14,6 +15,7 @@ import QueryHandlers from './query-handler';
   providers: [
     AccountsReadModelFinder, 
     IbanExistsQueryVaidator, 
+    TransactionQueryFinder,
     FinanceManagementService, 
     AccountEventStoreCollection, 
     ...CommandHandlers, 

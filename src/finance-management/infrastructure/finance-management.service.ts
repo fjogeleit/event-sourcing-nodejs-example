@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Transaction } from '../domain/transaction';
 import { Account } from '../domain/view/account';
 import { Money } from '../domain/money';
 import {
@@ -22,7 +23,8 @@ import {
 import { 
   FindAllAccounts, 
   FindAccountsByOwner,
-  FindAccountById
+  FindAccountById,
+  FindTransactionsByAccount
 } from '../domain/query';
 
 @Injectable()
@@ -95,5 +97,9 @@ export class FinanceManagementService {
 
   findAccountById(accountId: string): Promise<Account> {
     return this.queryBus.execute(new FindAccountById(accountId))
+  }
+
+  findTransactionsByAccountId(accountId: string): Promise<Transaction[]> {
+    return this.queryBus.execute(new FindTransactionsByAccount(accountId))
   }
 }
