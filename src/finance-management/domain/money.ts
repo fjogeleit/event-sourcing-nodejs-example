@@ -37,4 +37,8 @@ export class Money {
 
     return this.amount > money.amount;
   }
+
+  public toInt(): number {
+    return this.amount * 100;
+  }
 }

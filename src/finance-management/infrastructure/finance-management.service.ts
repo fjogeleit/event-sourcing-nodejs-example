@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { CommandBus, QueryBus } from '@nestjs/cqrs';
+import { Account } from '../domain/view/account';
+import { Money } from '../domain/money';
 import {
   AccountCollection
 } from 'src/finance-management/domain/account-collection';
-import { OpenAccount } from '../domain/command/open-account';
 import {
   IOpenAccount,
   IPerformDeposit,
@@ -11,11 +12,18 @@ import {
   IPerformTransfer,
   IChangeLineOfCredit,
 } from './command-payload';
-import { PerformDeposit } from '../domain/command/perform-deposit';
-import { Money } from '../domain/money';
-import { PerformWithdraw } from '../domain/command/perform-withdraw';
-import { PerformTransfer } from '../domain/command/perform-transfer';
-import { ChangeLineOfCredit } from '../domain/command/change-line-of-credit';
+import { 
+  OpenAccount,
+  PerformDeposit, 
+  PerformWithdraw, 
+  PerformTransfer, 
+  ChangeLineOfCredit 
+} from '../domain/command';
+import { 
+  FindAllAccounts, 
+  FindAccountsByOwner,
+  FindAccountById
+} from '../domain/query';
 
 @Injectable()
 export class FinanceManagementService {
@@ -75,5 +83,17 @@ export class FinanceManagementService {
         Money.euro(payload.amount),
       ),
     );
+  }
+
+  findAllAccounts(): Promise<Account[]> {
+    return this.queryBus.execute(new FindAllAccounts())
+  }
+
+  findAccountsByOwner(ownerId: string): Promise<Account[]> {
+    return this.queryBus.execute(new FindAccountsByOwner(ownerId))
+  }
+
+  findAccountById(accountId: string): Promise<Account> {
+    return this.queryBus.execute(new FindAccountById(accountId))
   }
 }

@@ -6,8 +6,9 @@ import {
 } from 'fj-event-store/postgres';
 import { EVENT_STORE } from './constants';
 import { CqrsModule } from '@nestjs/cqrs';
-
 import { FINANCE_MANAGEMENT_STREAM } from 'src/finance-management/domain/account-collection';
+import { Pool } from 'pg';
+import { createPostgresClient } from 'fj-event-store/dist/helper/postgres';
 
 @Global()
 @Module({
@@ -36,10 +37,15 @@ export class EventStoreCoreModule {
       inject: ['middleware'],
     };
 
+    const poolProvider = {
+      provide: Pool,
+      useValue: createPostgresClient(process.env.POSTGRES_DB),
+    }
+
     return {
       module: EventStoreCoreModule,
-      providers: [middleWareProvider, eventStoreProvider],
-      exports: [eventStoreProvider],
+      providers: [middleWareProvider, eventStoreProvider, poolProvider],
+      exports: [eventStoreProvider, poolProvider],
     };
   }
 }
