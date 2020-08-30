@@ -14,4 +14,4 @@ This Example API provides an EventSourced approach to create and manage BankAcco
 ## Requires
 
 * NodeJS v.12 or above
-* Docker or a local PostgreDB
+* Docker or a local PostgreSQL DB
