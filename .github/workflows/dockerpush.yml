@@ -13,6 +13,7 @@ on:
       - README.md
       - docker-compose.yaml
       - .env.example
+      - deployment.yaml
 
 env:
   IMAGE_NAME: example-api

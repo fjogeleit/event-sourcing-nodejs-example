@@ -1,0 +1,82 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      containers:
+      - image: postgres
+        name: postgres
+        env:
+          - name: POSTGRES_DB
+            value: event-store
+          - name: POSTGRES_USER
+            value: user
+          - name: POSTGRES_PASSWORD
+            value: password
+          - name: TZ
+            value: Europe/Berlin
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: postgres
+  name: postgres
+spec:
+  ports:
+  - port: 5432
+    protocol: TCP
+    targetPort: 5432
+  selector:
+    app: postgres
+  type: ClusterIP
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    app: example-api
+  name: example-api
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: example-api
+  template:
+    metadata:
+      labels:
+        app: example-api
+    spec:
+      containers:
+      - image: fjogeleit/event-sourcing-nodejs-example:latest
+        name: event-sourcing-nodejs-example
+        env:
+          - name: POSTGRES_DB
+            value: postgres://user:password@postgres:5432/event-store
+---
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    app: example-api
+  name: example-api
+spec:
+  ports:
+  - port: 3000
+    protocol: TCP
+    targetPort: 3000
+  selector:
+    app: example-api
+  type: NodePort
